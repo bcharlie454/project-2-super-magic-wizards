@@ -1,26 +1,27 @@
 /*
 Author: Rakesh Gummapu
 Date: 11/29/2023
-Description: Header file for the Captain subclass from Creature super calss
+Description: Header file for the Creature subclass of FieldInhabitant superclass
 */
 
-#ifndef CAPTAIN_H
-#define CAPTAIN_H
+#ifndef CREATURE_H
+#define CREATURE_H
 
-#include "Creature.h"
-#include "Veggie.h"
-#include <vector>
+#include "FieldInhabitant.h"
 #include <string>
 
-class Captain : public Creature 
+class Creature : public FieldInhabitant //Creature subclass from the FeildInhabitat superclass
 {
-    std::vector<Veggie*> collectedVeggies;
+protected:
+    int x, y;
 
 public:
-    Captain(int x, int y);
+    Creature(std::string symbol, int x, int y);
+    virtual void move(int dx, int dy);
 
-    void collectVeggie(Veggie* veggie);
-    const std::vector<Veggie*>& getCollectedVeggies() const;
+    int getX() const;  
+    int getY() const;
+    void setPosition(int x, int y);
 };
 
-#endif // CAPTAIN_H
+#endif // CREATURE_H
