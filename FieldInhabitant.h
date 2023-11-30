@@ -21,7 +21,7 @@ public:
     string getSymbol(); //Getter function for the symbol of the inhabitant
     void setSymbol(string); //Setter function for the symbol of the inhabitant
     
-    virtual ~FieldInhabitant() = 0; //Must be defined in the subclass
+    virtual ~FieldInhabitant(); //Must be defined in the subclass
 };
 
 #endif
