@@ -26,3 +26,8 @@ void FieldInhabitant::setSymbol(string symbol)
 {
     this->symbol = symbol;
 }
+
+// @brief Do nothing destructor to ensure that the subclass destructor gets called
+FieldInhabitant::~FieldInhabitant()
+{
+}
