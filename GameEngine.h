@@ -10,7 +10,7 @@ Description: Header file for the GameEngine class
 #include"FieldInhabitant.h"
 #include"Veggie.h"
 #include"Creature.h"
-//#include"Captain.h"
+#include"Captain.h"
 #include"Rabbit.h"
 #include<vector>
 #include<cstdlib>
@@ -26,8 +26,8 @@ private:
     int score; // Player score
     const int NUMBEROFVEGGIES = 30; // Constant value of number of starting veggies
     const int NUMBEROFRABBITS = 5; // Constant value of number of starting rabbits
-    //Captain* captianVeggie;  // Captain pointer to store captain object
-    //vector<Rabbit*> rabbits; // Vector of rabbit objects
+    Captain* captainVeggie;  // Captain pointer to store captain object
+    vector<Rabbit*> rabbits; // Vector of rabbit objects
     vector<Veggie*> veggies; // Vector of all the possible veggie objects
     //Snake* snake; // Snake pointer to store the snake
 
