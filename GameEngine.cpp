@@ -10,7 +10,7 @@ Description: Function file for the GameEngine class
 void GameEngine::initializeGame()
 {
     initVeggies();  
-    //initCaptain();
+    initCaptain();
     //initRabbits();
     //initSnake();
 
@@ -84,14 +84,29 @@ void GameEngine::initVeggies()
 
         int choice = rand () % veggies.size(); // Randomly choose veggie
 
-        field[y][x] = veggies[choice];
+        string symbol = veggies[choice]->getSymbol();
+        string name = veggies[choice]->getName();
+        int points = veggies[choice]->getPointValue();
+
+        field[y][x] = new Veggie(symbol,name,points);
     }
 }
 
 // @brief Initialization function for the Captain object in the game
 void GameEngine::initCaptain()
 {
+    int x = rand() % width;
+    int y = rand() % height;
 
+    // might need to edit this using dynamic_cast in case this nullptr strategy doesn't work
+    while(field[y][x] != nullptr) // pick a new random location if location is already occupied
+    {
+        x = rand() % width;
+        y = rand() % height;
+    }
+
+    captainVeggie = new Captain(x,y); // instantiates the captain object
+    field[y][x] = captainVeggie; // stores the captain pointer in the specific field location
 }
 
 // @brief Initilization function for the Rabbit objects in the game
@@ -110,7 +125,7 @@ void GameEngine::initSnake()
 // @return The amount of veggies remaining in the game
 int GameEngine::remainingVeggies()
 {
-    int count; // Counter variable
+    int count = 0; // Counter variable
 
     for (int i = 0; i < height; i++)
     {
@@ -204,20 +219,108 @@ void GameEngine::moveRabbits()
 // @param move User input value corresponding to up or down
 void GameEngine::moveCptVertical(int move) //Can change the int variable name to something that makes more sense
 {
+    // the convention will be to set +1 to move DOWN, and -1 to move UP (due to how the field locations are indexed)
+    int x_cur = captainVeggie->getX();
+    int y_cur = captainVeggie->getY();    
+    if(field[y_cur+move][x_cur] == nullptr)
+    {
+        captainVeggie->setPosition(x_cur,y_cur+move);
+        field[y_cur+move][x_cur] = captainVeggie;
+        field[y_cur][x_cur] = nullptr;
+    }
 
+    else if(Veggie* temp = dynamic_cast<Veggie*>(field[y_cur+move][x_cur]))
+    {
+        captainVeggie->setPosition(x_cur,y_cur+move);
+        cout << "You've collected a delicious " << temp->getName() << "!" << endl;
+        captainVeggie->collectVeggie(temp);
+        score += temp->getPointValue();
+        field[y_cur+move][x_cur] = captainVeggie;
+        field[y_cur][x_cur] = nullptr;
+    }
+
+    else if(dynamic_cast<Rabbit*>(field[y_cur+move][x_cur]) != nullptr)
+    {
+        cout << "You should not step on the rabbits!" << endl;
+    }
 }
 
 // @brief Horizontal movement function for the captain
 // @param move User input value corresponding to left or right
 void GameEngine::moveCptHorizontal(int move)
 {
+    // convention will be to set +1 to RIGHT, and -1 to LEFT
+    int x_cur = captainVeggie->getX();
+    int y_cur = captainVeggie->getY();    
+    
+    if(field[y_cur][x_cur+move] == nullptr)
+    {
+        captainVeggie->setPosition(x_cur+move,y_cur);
+        field[y_cur][x_cur+move] = captainVeggie; 
+        field[y_cur][x_cur] = nullptr;
+    }
 
+    else if(Veggie* temp = dynamic_cast<Veggie*>(field[y_cur][x_cur+move]))
+    {
+        captainVeggie->setPosition(x_cur+move,y_cur);
+        cout << "You've collected a delicious " << temp->getName() << "!" << endl;
+        captainVeggie->collectVeggie(temp);
+        score += temp->getPointValue();
+        field[y_cur][x_cur+move] = captainVeggie;
+        field[y_cur][x_cur] = nullptr;
+    }
+
+    else if(dynamic_cast<Rabbit*>(field[y_cur][x_cur+move]) != nullptr)
+    {
+        cout << "You should not step on the rabbits!" << endl;
+    }
 }
 
 // @brief Overall movement function for the captain
 void GameEngine::moveCaptain()
 {
+    char direction;
+    int x_cur = captainVeggie->getX();
+    cout << x_cur;
+    int y_cur = captainVeggie->getY();
+    cout << y_cur << endl;
+    cout << "Which direction would you like to move in: ";
+    cin >> direction;
+    direction = toupper(direction);
+    switch (direction)
+    {
+    case 'W':
+        if(y_cur == 0)
+            cout << "You cannot move outside the garden!" << endl;
+        else
+            moveCptVertical(-1);
+        break;
+    
+    case 'A':
+        if(x_cur == 0)
+            cout << "You cannot move outside the garden!" << endl;
+        else
+            moveCptHorizontal(-1);
+        break;
 
+    case 'S':
+        if(y_cur+1 == height)
+            cout << "You cannot move outside the garden!" << endl;
+        else
+            moveCptVertical(1);
+        break;
+
+    case 'D':
+        if(x_cur+1 == width)
+            cout << "You cannot move outside the garden!" << endl;
+        else
+            moveCptHorizontal(1);  
+        break;
+
+    default:
+        cout << "That is not a valid direction!" << endl;
+        break;
+    }
 }
 
 // @brief Snake movement function

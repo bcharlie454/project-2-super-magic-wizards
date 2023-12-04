@@ -21,18 +21,17 @@ int main()
         cout << game.remainingVeggies() << " veggies remaining. Current score: " << game.getScore() << endl; // print out current gamestate
 
         game.printField(); // print out current game board
-
+        
         game.moveRabbits(); // Decide the rabbit's move for the next round
 
         game.moveCaptain(); // Determine the captain's move for the next round
 
         game.moveSnake(); // Decide on the snake's move for the next round
 
-        //remainingVeggies = game.remainingVeggies(); // Update veggie count. Commented out until things can move
+        remainingVeggies = game.remainingVeggies(); // Update veggie count. Commented out until things can move
 
-        remainingVeggies = 0; // Temp for testing
+        cout << remainingVeggies << endl;
     }
     
     game.gameOver();
-
 }
