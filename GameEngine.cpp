@@ -84,15 +84,17 @@ void GameEngine::initVeggies()
 
         int choice = rand () % veggies.size(); // Randomly choose veggie
 
-        field[y][x] = veggies[choice];
+        string symbol = veggies[choice]->getSymbol();
+        string name = veggies[choice]->getName();
+        int points = veggies[choice]->getPointValue();
+
+        field[y][x] = new Veggie(symbol,name,points);
     }
 }
 
 // @brief Initialization function for the Captain object in the game
 void GameEngine::initCaptain()
 {
-    srand(time(0)); // Random seed for initial Captain location
-
     int x = rand() % width;
     int y = rand() % height;
 
@@ -103,7 +105,7 @@ void GameEngine::initCaptain()
         y = rand() % height;
     }
 
-    captainVeggie = new Captain(y,x); // instantiates the captain object
+    captainVeggie = new Captain(x,y); // instantiates the captain object
     field[y][x] = captainVeggie; // stores the captain pointer in the specific field location
 }
 
@@ -220,19 +222,20 @@ void GameEngine::moveCptVertical(int move) //Can change the int variable name to
     // the convention will be to set +1 to move DOWN, and -1 to move UP (due to how the field locations are indexed)
     int x_cur = captainVeggie->getX();
     int y_cur = captainVeggie->getY();    
-    
     if(field[y_cur+move][x_cur] == nullptr)
     {
         captainVeggie->setPosition(x_cur,y_cur+move);
-        field[y_cur,x_cur] = nullptr;
+        field[y_cur+move][x_cur] = captainVeggie;
+        field[y_cur][x_cur] = nullptr;
     }
 
     else if(Veggie* temp = dynamic_cast<Veggie*>(field[y_cur+move][x_cur]))
     {
+        captainVeggie->setPosition(x_cur,y_cur+move);
         cout << "You've collected a delicious " << temp->getName() << "!" << endl;
         captainVeggie->collectVeggie(temp);
         score += temp->getPointValue();
-        captainVeggie->setPosition(x_cur,y_cur+move);
+        field[y_cur+move][x_cur] = captainVeggie;
         field[y_cur][x_cur] = nullptr;
     }
 
@@ -253,15 +256,17 @@ void GameEngine::moveCptHorizontal(int move)
     if(field[y_cur][x_cur+move] == nullptr)
     {
         captainVeggie->setPosition(x_cur+move,y_cur);
-        field[y_cur,x_cur] = nullptr;
+        field[y_cur][x_cur+move] = captainVeggie; 
+        field[y_cur][x_cur] = nullptr;
     }
 
     else if(Veggie* temp = dynamic_cast<Veggie*>(field[y_cur][x_cur+move]))
     {
+        captainVeggie->setPosition(x_cur+move,y_cur);
         cout << "You've collected a delicious " << temp->getName() << "!" << endl;
         captainVeggie->collectVeggie(temp);
         score += temp->getPointValue();
-        captainVeggie->setPosition(x_cur+move,y_cur);
+        field[y_cur][x_cur+move] = captainVeggie;
         field[y_cur][x_cur] = nullptr;
     }
 
@@ -278,35 +283,35 @@ void GameEngine::moveCaptain()
     int x_cur = captainVeggie->getX();
     cout << x_cur;
     int y_cur = captainVeggie->getY();
-    cout << y_cur;
+    cout << y_cur << endl;
     cout << "Which direction would you like to move in: ";
     cin >> direction;
     direction = toupper(direction);
     switch (direction)
     {
     case 'W':
-        if(y_cur-1 < 0)
+        if(y_cur == 0)
             cout << "You cannot move outside the garden!" << endl;
         else
             moveCptVertical(-1);
         break;
     
     case 'A':
-        if(x_cur-1 < 0)
+        if(x_cur == 0)
             cout << "You cannot move outside the garden!" << endl;
         else
             moveCptHorizontal(-1);
         break;
 
     case 'S':
-        if(y_cur+1 > height)
+        if(y_cur+1 == height)
             cout << "You cannot move outside the garden!" << endl;
         else
             moveCptVertical(1);
         break;
 
     case 'D':
-        if(x_cur+1 > width)
+        if(x_cur+1 == width)
             cout << "You cannot move outside the garden!" << endl;
         else
             moveCptHorizontal(1);  

@@ -29,6 +29,8 @@ int main()
         game.moveSnake(); // Decide on the snake's move for the next round
 
         remainingVeggies = game.remainingVeggies(); // Update veggie count. Commented out until things can move
+
+        cout << remainingVeggies << endl;
     }
     
     game.gameOver();
