@@ -253,7 +253,7 @@ void GameEngine::moveRabbits()
         }
 
         // Check if the new position is occupied by another rabbit or the captain
-        if (dynamic_cast<Rabbit*>(field[newY][newX]) != nullptr || dynamic_cast<Captain*>(field[newY][newX]) != nullptr)
+        if (dynamic_cast<Rabbit*>(field[newY][newX]) != nullptr || dynamic_cast<Captain*>(field[newY][newX]) != nullptr || dynamic_cast<Snake*>(field[newY][newX]) != nullptr)
         {
             continue; // Skip the rest of the loop if new position is occupied
         }
