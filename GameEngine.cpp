@@ -112,6 +112,21 @@ void GameEngine::initCaptain()
 // @brief Initilization function for the Rabbit objects in the game
 void GameEngine::initRabbits()
 {
+     for (int i = 0; i < NUMBEROFRABBITS; ++i)
+    {
+        int x, y;
+
+        do
+        {
+            x = rand() % width; // Random X-coordinate within field boundaries
+            y = rand() % height; // Random Y-coordinate within field boundaries
+
+        } while (field[y][x] != nullptr); // Ensure the chosen position is unoccupied
+
+        Rabbit* newRabbit = new Rabbit(x, y); // Create a new Rabbit object
+        rabbits.push_back(newRabbit); // Add the Rabbit to the vector of rabbits
+        field[y][x] = newRabbit; // Place the Rabbit on the field
+    }
 
 }
 
@@ -223,6 +238,38 @@ int GameEngine::getScore()
 // @brief Rabbit movement function
 void GameEngine::moveRabbits()
 {
+    for (auto& rabbit : rabbits) // Loop through all rabbits
+    {
+        int dx = rand() % 3 - 1; // Generate a random movement delta for x (-1, 0, 1)
+        int dy = rand() % 3 - 1; // Generate a random movement delta for y (-1, 0, 1)
+
+        int newX = rabbit->getX() + dx;
+        int newY = rabbit->getY() + dy;
+
+        // Boundary check
+        if (newX < 0 || newX >= width || newY < 0 || newY >= height)
+        {
+            continue; // Skip the rest of the loop if new position is outside boundaries
+        }
+
+        // Check if the new position is occupied by another rabbit or the captain
+        if (dynamic_cast<Rabbit*>(field[newY][newX]) != nullptr || dynamic_cast<Captain*>(field[newY][newX]) != nullptr)
+        {
+            continue; // Skip the rest of the loop if new position is occupied
+        }
+
+        // Check if the rabbit moves into a space with a vegetable
+        if (Veggie* veggie = dynamic_cast<Veggie*>(field[newY][newX]))
+        {
+            // Consume the vegetable
+            delete veggie; // Assume proper memory management is handled
+        }
+
+        // Move the rabbit
+        field[rabbit->getY()][rabbit->getX()] = nullptr; // Set previous position to nullptr
+        rabbit->setPosition(newX, newY); // Update rabbit's position
+        field[newY][newX] = rabbit; // Place rabbit in new position on the field
+    }
 
 }
 
