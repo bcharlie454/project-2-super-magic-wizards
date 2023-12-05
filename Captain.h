@@ -21,6 +21,8 @@ public:
 
     void collectVeggie(Veggie* veggie);
     const std::vector<Veggie*>& getCollectedVeggies() const;
+
+int deleteVeggie();
 };
 
 #endif // CAPTAIN_H

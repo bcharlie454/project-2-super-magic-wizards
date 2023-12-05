@@ -12,7 +12,7 @@ void GameEngine::initializeGame()
     initVeggies();  
     initCaptain();
     //initRabbits();
-    //initSnake();
+    initSnake();
 
     score = 0;
 }
@@ -32,7 +32,7 @@ void GameEngine::initVeggies()
     while (!inStream.is_open())  //Check if file exists and asks for new one if no
     {
         cout << "That file doesn't exist!\nPlease enter in a new file name: ";
-        inStream >> fileName;
+        cin >> fileName;
         inStream.open(fileName);
     }
 
@@ -118,7 +118,18 @@ void GameEngine::initRabbits()
 // @brief Initilization function for the Snake object in the game
 void GameEngine::initSnake()
 {
+    int x = rand() % width;
+    int y = rand() % height;
 
+    // Taken from The initialize Captian function. If that doesn't work, then this must change as well
+    while(field[y][x] != nullptr) // pick a new random location if location is already occupied
+    {
+        x = rand() % width;
+        y = rand() % height;
+    }
+
+    snake = new Snake(x,y); // Create snake object and assign it the corresponding location
+    field[y][x] = snake;
 }
 
 // @brief Counts the field for how many veggies remain in the game
@@ -243,6 +254,10 @@ void GameEngine::moveCptVertical(int move) //Can change the int variable name to
     {
         cout << "You should not step on the rabbits!" << endl;
     }
+    else
+    {
+        cout << "That's a snake!" << endl;
+    }
 }
 
 // @brief Horizontal movement function for the captain
@@ -274,6 +289,10 @@ void GameEngine::moveCptHorizontal(int move)
     {
         cout << "You should not step on the rabbits!" << endl;
     }
+    else
+    {
+        cout << "That's a snake!" << endl;
+    }
 }
 
 // @brief Overall movement function for the captain
@@ -289,27 +308,28 @@ void GameEngine::moveCaptain()
     direction = toupper(direction);
     switch (direction)
     {
+    case 'w':
     case 'W':
         if(y_cur == 0)
             cout << "You cannot move outside the garden!" << endl;
         else
             moveCptVertical(-1);
         break;
-    
+    case 'a':
     case 'A':
         if(x_cur == 0)
             cout << "You cannot move outside the garden!" << endl;
         else
             moveCptHorizontal(-1);
-        break;
-
+        break;    
+    case 's':
     case 'S':
         if(y_cur+1 == height)
             cout << "You cannot move outside the garden!" << endl;
         else
             moveCptVertical(1);
         break;
-
+    case 'd':
     case 'D':
         if(x_cur+1 == width)
             cout << "You cannot move outside the garden!" << endl;
@@ -326,7 +346,100 @@ void GameEngine::moveCaptain()
 // @brief Snake movement function
 void GameEngine::moveSnake()
 {
+    int xSnk = snake->getX();//Get snake position
+    int ySnk = snake->getY();
 
+    int xCap = captainVeggie->getX();//Get captain position
+    int yCap = captainVeggie->getY();
+
+    int dist = 0;
+    double shortDist = 0; //The distance to the captain, and the current shortest distance
+
+    char dir = 0; // Chosen direction of movement
+
+    double distN = sqrt(pow(xCap - xSnk, 2) + pow(yCap - (ySnk-1), 2)); // find the vectors to the captain after moving in each direction
+    double distS = sqrt(pow(xCap - xSnk, 2) + pow(yCap - (ySnk+1), 2));
+    double distE = sqrt(pow(xCap - (xSnk+1), 2) + pow(yCap - ySnk, 2));
+    double distW = sqrt(pow(xCap - (xSnk-1), 2) + pow(yCap - ySnk, 2));
+
+    shortDist = min(distN, min(distS, min(distE, distW))); // find which one is shortest
+
+    if(shortDist == distN) // decide which way to move based on minimum distance
+    {
+        cout << "Moveing North" << endl;
+        if(xSnk == xCap && ySnk-1 == yCap) // check if captain is in the space being moved to
+        {
+            resetSnake(xSnk, ySnk);
+        }
+        else if (field[ySnk-1][xSnk] == nullptr) // check if the space is otherwise empty
+        {
+            snake->setPosition(xSnk, ySnk-1);
+            field[ySnk-1][xSnk] = snake; 
+            field[ySnk][xSnk] = nullptr;
+        }
+        else // don't move if there is anything in the way
+        {
+            cout << "Movement Failure" << endl;
+        }      
+    }
+    else if(shortDist == distS)
+    {
+        cout << "Moving South" << endl;
+        if(xSnk == xCap && ySnk+1 == yCap)
+        {
+            resetSnake(xSnk, ySnk);
+        }
+        else if (field[ySnk+1][xSnk] == nullptr)
+        {
+            snake->setPosition(xSnk, ySnk+1);
+            field[ySnk+1][xSnk] = snake; 
+            field[ySnk][xSnk] = nullptr;
+        }
+        else
+        {
+            cout << "Movement Failure" << endl;
+        }
+    }
+    else if(shortDist == distE)
+    {
+        cout << "Moving East" << endl;
+        if(xSnk+1 == xCap && ySnk == yCap)
+        {
+            resetSnake(xSnk, ySnk);
+        }
+        else if (field[ySnk][xSnk+1] == nullptr)
+        {
+            snake->setPosition(xSnk+1, ySnk);
+            field[ySnk][xSnk+1] = snake; 
+            field[ySnk][xSnk] = nullptr;
+        }
+        else
+        {
+            cout << "Movement Failure" << endl;
+        }
+    }
+    else if(shortDist == distW)
+    {
+        cout << "Moving West" << endl;
+        if(xSnk-1 == xCap && ySnk == yCap)
+        {
+            resetSnake(xSnk, ySnk);
+        }
+        else if (field[ySnk][xSnk-1] == nullptr)
+        {
+            snake->setPosition(xSnk-1, ySnk);
+            field[ySnk][xSnk-1] = snake; 
+            field[ySnk][xSnk] = nullptr;
+        }
+        else
+        {
+            cout << "Movement Failure" << endl;
+        }
+    }
+    else
+    {
+        cout << "Direciton Failure" << endl;
+    }
 }
 
 // @brief Tells the user game over. Also informs them of their score and position on the leaderboard
@@ -338,29 +451,31 @@ void GameEngine::gameOver()
     cout << "TEMP VEGGIES. REAL VEGGIES WILL BE GIVEN SHORTLY" << endl; // replace with output loop of the captain's veggies
 
     cout << "Your score was: " << getScore() << endl; // output score
+}
 
-    cout << "Please enter your 3 initials for the score: ";
-    string initials;
-    cin >> initials;
-
-    cout << "Name	Score" << endl;
-
-    if(getScore() > 62)
-        cout << initials << "		" << getScore() << endl;
-
-    cout << "HGH		62" << endl;
-
-    if(getScore() <= 62 && getScore() > 50)
-        cout << initials << "		" << getScore() << endl;
+// @brief Takes vegtables from captain veggie and resets the snake position
+void GameEngine::resetSnake(int xSnk, int ySnk)
+{
+    cout << "The snake has captured some of your veggies!" << endl;
+    field[ySnk][xSnk] = nullptr;
     
-    cout << "JEH		50" << endl;
+    for (int i = 0; i < 5; i++) // delete last five veggies
+    {
+        int deleted = captainVeggie->deleteVeggie();
+        score = score-deleted;
+    }
 
-    if(getScore() <= 50 && getScore() > 21)
-        cout << initials << "		" << getScore() << endl;
-    
-    cout << "CCH		21" << endl;
+    int x = rand() % width; // re-randomize snake location
+    int y = rand() % height;
 
-    if(getScore() <= 21)
-        cout << initials << "		" << getScore() << endl;
-    
+    // Taken from The initialize Captian function. If that doesn't work, then this must change as well
+    while(field[y][x] != nullptr) // pick a new random location if location is already occupied
+    {
+        x = rand() % width;
+        y = rand() % height;
+    }
+
+    snake->setPosition(x,y); // actually reset position
+    field[y][x] = snake;
+
 }

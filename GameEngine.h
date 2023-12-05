@@ -16,6 +16,7 @@ Description: Header file for the GameEngine class
 #include<cstdlib>
 #include<fstream>
 #include<time.h>
+#include<cmath>
 
 class GameEngine
 {
@@ -54,6 +55,8 @@ public:
     int getScore(); // Getter for Score
 
     int remainingVeggies(); // Outputs the amount of remaining Veggies
+
+    void resetSnake(int, int);
     
 };
 
