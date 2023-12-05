@@ -25,3 +25,18 @@ const std::vector<Veggie*>& Captain::getCollectedVeggies() const
 {
     return collectedVeggies;
 }
+
+// @brief Deletes last veggie collected
+// @return Point value of the deleted Veggie
+int Captain::deleteVeggie()
+{
+    Veggie* last; // Create temp veggie variable
+
+    if(collectedVeggies.size() == 0) // if there is no veggies, then do nothing
+    return 0;
+
+    last = collectedVeggies.back(); // Get last veggie
+    int lastVeggie = last->getPointValue(); // Get last veggie point value
+    collectedVeggies.pop_back(); // delete veggie
+    return lastVeggie; // return veggie point value
+}
