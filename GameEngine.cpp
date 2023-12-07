@@ -492,10 +492,18 @@ void GameEngine::moveSnake()
 // @brief Tells the user game over. Also informs them of their score and position on the leaderboard
 void GameEngine::gameOver()
 {
+    printField(); // last field print
+
     cout << "GAME OVER!" << endl;
     cout << "You got these vegtables:" << endl;
     
-    cout << "TEMP VEGGIES. REAL VEGGIES WILL BE GIVEN SHORTLY" << endl; // replace with output loop of the captain's veggies
+    vector<Veggie*> finalVeggies = captainVeggie->getCollectedVeggies();
+
+    for (int i = 0; i < finalVeggies.size(); i++)
+    {
+        cout << finalVeggies[i]->getName() << endl;
+    }
+    
 
     cout << "Your score was: " << getScore() << endl; // output score
 }
