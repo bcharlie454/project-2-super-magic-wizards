@@ -12,6 +12,7 @@ Description: Header file for the GameEngine class
 #include"Creature.h"
 #include"Captain.h"
 #include"Rabbit.h"
+#include"Snake.h"
 #include<vector>
 #include<cstdlib>
 #include<fstream>
@@ -30,7 +31,7 @@ private:
     Captain* captainVeggie;  // Captain pointer to store captain object
     vector<Rabbit*> rabbits; // Vector of rabbit objects
     vector<Veggie*> veggies; // Vector of all the possible veggie objects
-    //Snake* snake; // Snake pointer to store the snake
+    Snake* snake; // Snake pointer to store the snake
 
     void initVeggies(); // Initialization functions for each thing
     void initCaptain();

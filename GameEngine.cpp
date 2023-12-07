@@ -11,7 +11,7 @@ void GameEngine::initializeGame()
 {
     initVeggies();  
     initCaptain();
-    //initRabbits();
+    initRabbits();
     initSnake();
 
     score = 0;
@@ -413,7 +413,7 @@ void GameEngine::moveSnake()
 
     if(shortDist == distN) // decide which way to move based on minimum distance
     {
-        cout << "Moveing North" << endl;
+        //cout << "Moveing North" << endl;
         if(xSnk == xCap && ySnk-1 == yCap) // check if captain is in the space being moved to
         {
             resetSnake(xSnk, ySnk);
@@ -426,12 +426,12 @@ void GameEngine::moveSnake()
         }
         else // don't move if there is anything in the way
         {
-            cout << "Movement Failure" << endl;
+            //cout << "Movement Failure" << endl;
         }      
     }
     else if(shortDist == distS)
     {
-        cout << "Moving South" << endl;
+        //cout << "Moving South" << endl;
         if(xSnk == xCap && ySnk+1 == yCap)
         {
             resetSnake(xSnk, ySnk);
@@ -444,12 +444,12 @@ void GameEngine::moveSnake()
         }
         else
         {
-            cout << "Movement Failure" << endl;
+            //cout << "Movement Failure" << endl;
         }
     }
     else if(shortDist == distE)
     {
-        cout << "Moving East" << endl;
+        //cout << "Moving East" << endl;
         if(xSnk+1 == xCap && ySnk == yCap)
         {
             resetSnake(xSnk, ySnk);
@@ -462,12 +462,12 @@ void GameEngine::moveSnake()
         }
         else
         {
-            cout << "Movement Failure" << endl;
+            //cout << "Movement Failure" << endl;
         }
     }
     else if(shortDist == distW)
     {
-        cout << "Moving West" << endl;
+        //cout << "Moving West" << endl;
         if(xSnk-1 == xCap && ySnk == yCap)
         {
             resetSnake(xSnk, ySnk);
@@ -480,24 +480,33 @@ void GameEngine::moveSnake()
         }
         else
         {
-            cout << "Movement Failure" << endl;
+            //cout << "Movement Failure" << endl;
         }
     }
     else
     {
-        cout << "Direciton Failure" << endl;
+        //cout << "Direciton Failure" << endl;
     }
 }
 
 // @brief Tells the user game over. Also informs them of their score and position on the leaderboard
 void GameEngine::gameOver()
 {
+    printField(); // last field print
+
     cout << "GAME OVER!" << endl;
     cout << "You got these vegtables:" << endl;
     
-    cout << "TEMP VEGGIES. REAL VEGGIES WILL BE GIVEN SHORTLY" << endl; // replace with output loop of the captain's veggies
+    vector<Veggie*> finalVeggies = captainVeggie->getCollectedVeggies();
+
+    for (int i = 0; i < finalVeggies.size(); i++)
+    {
+        cout << finalVeggies[i]->getName() << endl;
+    }
+    
 
     cout << "Your score was: " << getScore() << endl; // output score
+    cout << "Thank you for playing our game!" << endl;
 }
 
 // @brief Takes vegtables from captain veggie and resets the snake position
