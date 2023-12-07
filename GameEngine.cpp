@@ -506,6 +506,7 @@ void GameEngine::gameOver()
     
 
     cout << "Your score was: " << getScore() << endl; // output score
+    cout << "Thank you for playing our game!" << endl;
 }
 
 // @brief Takes vegtables from captain veggie and resets the snake position
