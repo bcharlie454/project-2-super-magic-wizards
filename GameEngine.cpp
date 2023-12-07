@@ -413,7 +413,7 @@ void GameEngine::moveSnake()
 
     if(shortDist == distN) // decide which way to move based on minimum distance
     {
-        cout << "Moveing North" << endl;
+        //cout << "Moveing North" << endl;
         if(xSnk == xCap && ySnk-1 == yCap) // check if captain is in the space being moved to
         {
             resetSnake(xSnk, ySnk);
@@ -426,12 +426,12 @@ void GameEngine::moveSnake()
         }
         else // don't move if there is anything in the way
         {
-            cout << "Movement Failure" << endl;
+            //cout << "Movement Failure" << endl;
         }      
     }
     else if(shortDist == distS)
     {
-        cout << "Moving South" << endl;
+        //cout << "Moving South" << endl;
         if(xSnk == xCap && ySnk+1 == yCap)
         {
             resetSnake(xSnk, ySnk);
@@ -444,12 +444,12 @@ void GameEngine::moveSnake()
         }
         else
         {
-            cout << "Movement Failure" << endl;
+            //cout << "Movement Failure" << endl;
         }
     }
     else if(shortDist == distE)
     {
-        cout << "Moving East" << endl;
+        //cout << "Moving East" << endl;
         if(xSnk+1 == xCap && ySnk == yCap)
         {
             resetSnake(xSnk, ySnk);
@@ -462,12 +462,12 @@ void GameEngine::moveSnake()
         }
         else
         {
-            cout << "Movement Failure" << endl;
+            //cout << "Movement Failure" << endl;
         }
     }
     else if(shortDist == distW)
     {
-        cout << "Moving West" << endl;
+        //cout << "Moving West" << endl;
         if(xSnk-1 == xCap && ySnk == yCap)
         {
             resetSnake(xSnk, ySnk);
@@ -480,12 +480,12 @@ void GameEngine::moveSnake()
         }
         else
         {
-            cout << "Movement Failure" << endl;
+            //cout << "Movement Failure" << endl;
         }
     }
     else
     {
-        cout << "Direciton Failure" << endl;
+        //cout << "Direciton Failure" << endl;
     }
 }
 
