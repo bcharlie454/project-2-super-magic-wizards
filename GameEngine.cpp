@@ -11,7 +11,7 @@ void GameEngine::initializeGame()
 {
     initVeggies();  
     initCaptain();
-    //initRabbits();
+    initRabbits();
     initSnake();
 
     score = 0;
