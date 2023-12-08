@@ -347,9 +347,7 @@ void GameEngine::moveCaptain()
 {
     char direction;
     int x_cur = captainVeggie->getX();
-    cout << x_cur;
     int y_cur = captainVeggie->getY();
-    cout << y_cur << endl;
     cout << "Which direction would you like to move in: ";
     cin >> direction;
     direction = toupper(direction);
